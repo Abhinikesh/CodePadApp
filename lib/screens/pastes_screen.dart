@@ -287,15 +287,45 @@ class _PastesScreenState extends State<PastesScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text(
-                                    paste.title,
-                                    style: GoogleFonts.inter(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          paste.title,
+                                          style: GoogleFonts.inter(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            Icons.calendar_today_rounded,
+                                            size: 13,
+                                            color: Color(0xFF4A4A6A),
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            _formatDate(paste.createdAt),
+                                            style: GoogleFonts.inter(
+                                              color: const Color(0xFF4A4A6A),
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: 10),
                                   Container(
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
@@ -316,95 +346,74 @@ class _PastesScreenState extends State<PastesScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.calendar_today_rounded,
-                                            size: 14,
-                                            color: Color(0xFF4A4A6A),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            _formatDate(paste.createdAt),
-                                            style: GoogleFonts.inter(
-                                              color: const Color(0xFF4A4A6A),
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
+                                      IconButton(
+                                        icon: const Icon(Icons.visibility_outlined, size: 18),
+                                        color: const Color(0xFF38BDF8),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ViewPasteScreen(
+                                                paste: paste,
+                                                onEdit: (p) {
+                                                  Navigator.pop(context);
+                                                  widget.onEdit(p);
+                                                },
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ).then((_) => _loadPastes());
+                                        },
                                       ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(Icons.visibility_outlined, size: 18),
-                                            color: const Color(0xFF38BDF8),
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => ViewPasteScreen(paste: paste),
-                                                ),
-                                              ).then((_) => _loadPastes());
-                                            },
-                                          ),
-                                          const SizedBox(width: 12),
-                                          IconButton(
-                                            icon: const Icon(Icons.edit_outlined, size: 18),
-                                            color: const Color(0xFF38BDF8),
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                            onPressed: () => widget.onEdit(paste),
-                                          ),
-                                          const SizedBox(width: 12),
-                                          IconButton(
-                                            icon: const Icon(Icons.copy_rounded, size: 18),
-                                            color: const Color(0xFF38BDF8),
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                            onPressed: () async {
-                                              await Clipboard.setData(ClipboardData(text: paste.content));
-                                              Fluttertoast.showToast(
-                                                msg: "Copied to clipboard",
-                                                backgroundColor: const Color(0xFF27C93F),
-                                                textColor: Colors.white,
-                                              );
-                                            },
-                                          ),
-                                          const SizedBox(width: 12),
-                                          IconButton(
-                                            icon: const Icon(Icons.share_outlined, size: 18),
-                                            color: const Color(0xFF38BDF8),
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                            onPressed: () async {
-                                              await SharePlus.instance.share(
-                                                ShareParams(
-                                                  text: paste.content,
-                                                  subject: paste.title,
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                          const SizedBox(width: 12),
-                                          IconButton(
-                                            icon: const Icon(Icons.download_outlined, size: 18),
-                                            color: const Color(0xFF38BDF8),
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                            onPressed: () => _downloadPaste(paste),
-                                          ),
-                                          const SizedBox(width: 12),
-                                          IconButton(
-                                            icon: const Icon(Icons.delete_outline_rounded, size: 18),
-                                            color: const Color(0xFFFF5F56),
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                            onPressed: () => _confirmDelete(paste),
-                                          ),
-                                        ],
+                                      IconButton(
+                                        icon: const Icon(Icons.edit_outlined, size: 18),
+                                        color: const Color(0xFF38BDF8),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () => widget.onEdit(paste),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.copy_rounded, size: 18),
+                                        color: const Color(0xFF38BDF8),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () async {
+                                          await Clipboard.setData(ClipboardData(text: paste.content));
+                                          Fluttertoast.showToast(
+                                            msg: "Copied to clipboard",
+                                            backgroundColor: const Color(0xFF27C93F),
+                                            textColor: Colors.white,
+                                          );
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.share_outlined, size: 18),
+                                        color: const Color(0xFF38BDF8),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () async {
+                                          await SharePlus.instance.share(
+                                            ShareParams(
+                                              text: paste.content,
+                                              subject: paste.title,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.download_outlined, size: 18),
+                                        color: const Color(0xFF38BDF8),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () => _downloadPaste(paste),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                                        color: const Color(0xFFFF5F56),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () => _confirmDelete(paste),
                                       ),
                                     ],
                                   ),
