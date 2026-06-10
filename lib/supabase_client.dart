@@ -1,0 +1,6 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+const String supabaseUrl = 'https://sb_publishable_WfPPjjQBOZIvjBsryHG5DQ_tIzEfW2R';
+const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNoaW95dXl4YnNtYXllanB3bXdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwOTAwNjcsImV4cCI6MjA5NjY2NjA2N30.HSnT6uOFLPFVQQlpZn1zUu9bezvlrggplfyjB4GGcrM';
+
+final SupabaseClient supabase = Supabase.instance.client;

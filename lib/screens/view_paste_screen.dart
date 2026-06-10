@@ -1,0 +1,69 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:codepad_app/models/paste.dart';
+import 'package:codepad_app/widgets/code_editor_box.dart';
+
+class ViewPasteScreen extends StatelessWidget {
+  final Paste paste;
+
+  const ViewPasteScreen({
+    super.key,
+    required this.paste,
+  });
+
+  Future<void> _copyContent() async {
+    await Clipboard.setData(ClipboardData(text: paste.content));
+    Fluttertoast.showToast(
+      msg: "Copied to clipboard",
+      backgroundColor: const Color(0xFF27C93F),
+      textColor: Colors.white,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0F0F11),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0F0F11),
+        elevation: 0,
+        titleSpacing: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+            size: 20,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          paste.title,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: CodeEditorBox(
+                  value: paste.content,
+                  readOnly: true,
+                  onCopyPressed: _copyContent,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
